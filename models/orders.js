@@ -1,13 +1,19 @@
-//los models son los modelos de las collections 
 import mongoose from "mongoose";
-const Schema = mongoose.Schema; // schema = equema de 
+const Schema = mongoose.Schema;
 
-const orderSchema = new Schema({
-    total: {type:Number},
-    products: {type: Array},
-    clientID: { type: String},
-    timestamps: true,
-})
+const orderSchema = new Schema(
+  {
+    total: { type: Number },
+    products: { type: Array },
+    clientId: { type: String },
+  },
+  {
+    timestamps: true, //esto agrega automaticamente 2 registros más en mi objeto: dos timestamps
+  }
+);
+//le paso un objeto con los datos de la order
 
-export default mongoose.model("Order", orderSchema, "Orders"); // 1er parametro - de la forma que quiero que se llame, 2do - const del producto, 3ero - como se llama en mongodb mi coleccion
-
+//para cuando tengamos que hacer operaciones de grabar, va a usar este product como esquema
+export default mongoose.model("Order", orderSchema, "Orders");
+//primer parámetro: cómo se va a llamar nuestro modelo: Product
+// 3ero: cómo se llama nuestra collection en mongo

@@ -1,27 +1,32 @@
-import mongoose from "mongoose"; //para mongo db
-import chalk from "chalk"; // para que la consola tenga colores
-import "dotenv/config"; 
+import mongoose from "mongoose";
+import chalk from "chalk";
+import "dotenv/config";
 
-// DB Connection // funcion asincronica que traemos el protocolo
+// DB Connection
 const connectDb = async () => {
-  let connectionString = process.env.DB_PROTOCOL; // algo interno de node que nos permite leer e interpretar que trae - la va a remplazar por DB_HOST= "mongodb+srv://jimezapolski:<password>@cluster0.jf6r2u5.mongodb.net/"
+  let connectionString = process.env.DB_PROTOCOL;
   if (process.env.DB_USER && process.env.DB_PASS) {
-    connectionString += `${process.env.DB_USER}:${process.env.DB_PASS}@`; // arma la concatenacion de lo que me aparece en mongodb = forma nuestro string de conexion - todo traido desde el .env
+    connectionString += `${process.env.DB_USER}:${process.env.DB_PASS}@`;
   }
   connectionString += `${process.env.DB_HOST}/${process.env.DB_NAME}`;
+  //   este es el string de conexión
 
-  mongoose
+  //una vez que tenemos la conexión a la base de datos no hay que volver a conectarla
+  mongoose //va a hacer la conexión a la base de datos
     .connect(`${connectionString}?retryWrites=true&w=majority`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
+    //then y catch son formas de llamar a las promesas async y await
+    //si esto conectó, va a ir por el then y va a ejecutar este callback
+    //si hubo un error porq está mal el pass o el user, va a ir por el catch y va a tirar ese consoleLog en rojo (chalk)
     .then(() => console.log(chalk.green("Conected to database")))
     .catch((err) =>
       console.log(
         chalk.bgRed.white("Database not connected", err.code, err.input)
       )
     );
-}; //armamos el try catch para poder conectarnos a la base de datos
+};
 
 const disconnectDb = async () => {
   try {
